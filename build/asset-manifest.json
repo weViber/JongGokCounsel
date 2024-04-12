@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/static/css/main.e0719b22.css",
+    "main.js": "/static/js/main.7153f453.js",
+    "static/js/787.c4e7f8f9.chunk.js": "/static/js/787.c4e7f8f9.chunk.js",
+    "static/media/AppleSDGothicNeoM.ttf": "/static/media/AppleSDGothicNeoM.88c00162a2084f97069c.ttf",
+    "static/media/JungGok.png": "/static/media/JungGok.587130cae4e40acefb25.png",
+    "index.html": "/index.html",
+    "main.e0719b22.css.map": "/static/css/main.e0719b22.css.map",
+    "main.7153f453.js.map": "/static/js/main.7153f453.js.map",
+    "787.c4e7f8f9.chunk.js.map": "/static/js/787.c4e7f8f9.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e0719b22.css",
+    "static/js/main.7153f453.js"
+  ]
+}
