@@ -22,22 +22,23 @@ const db = require("./app/models");
 const Role = db.role;
 const MONGO_URL = process.env.MONGO_URL || 'mongodb+srv://lyncare:fls2022@lyncare.5ip2vsa.mongodb.net/junggok?retryWrites=true&w=majority'
 const PORT = process.env.PORT || 8080
-db.mongoose
-  .connect(MONGO_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  })
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log('Server Start');
-    });
-  })
-  .catch(err => {
-    console.error("Connection error", err);
-    process.exit();
-  });
 
-app.get('/', function (req, res) {
+db.mongoose
+    .connect(MONGO_URL, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    })
+    .then(() => {
+        app.listen(PORT, () => {
+            console.log('Server Start');
+        });
+    })
+    .catch(err => {
+        console.error("Connection error", err);
+        process.exit();
+    });
+
+app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname, '/build/index.html'));
 });
 
@@ -45,6 +46,6 @@ app.get('/', function (req, res) {
 require('./app/routes/reservation.routes')(app);
 
 //
-app.get('*', function (req, res) {
+app.get('*', function(req, res) {
     res.sendFile(path.join(__dirname, '/build/index.html'));
 });
