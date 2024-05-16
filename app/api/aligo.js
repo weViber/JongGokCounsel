@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-exports.aligo = async (result) => {
+exports.aligo = async(result) => {
     const { name, phone, reqdate, resdate, option } = result
     const _reqdate = String(reqdate)
     const _resdate = String(resdate)
@@ -14,13 +14,13 @@ exports.aligo = async (result) => {
             key: "3hwizw8ew1cd8qfwclrqa6mwps259gsm",
             user_id: "lyncare",
             sender: "0269567985",
-            receiver: "01074841981",
+            receiver: "01085959869",
             msg: message,
             title: "법무법인 정곡 신규 상담 알림"
         },
-    }).then((result)=>{
+    }).then((result) => {
         console.log('Success : ', result)
-    }).catch((err)=>{
+    }).catch((err) => {
         console.log('ERR Message : ', err)
     })
 }
