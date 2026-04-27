@@ -1,5 +1,6 @@
 const db = require("../models");
 const { aligo } = require('../api/aligo')
+const { sendReservationNotification } = require('../utils/telegram')
 const { reservation : Reservation } = db;
 
 exports.reservation = async (req, res) => {
@@ -18,8 +19,9 @@ exports.reservation = async (req, res) => {
         RVstatus : '신규상담'
     })
     await reservation.save().then(
-        result => {
+        async result => {
             aligo(result)
+            await sendReservationNotification(result)
             return res.status(200).json({ message : "성공" , date : date, result })
         }
     ).catch(err => console.log(err))
