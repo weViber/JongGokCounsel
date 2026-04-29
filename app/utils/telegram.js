@@ -15,24 +15,54 @@ const truncate = (text, max) => {
     return text.length > max ? `${text.slice(0, max)}...` : text;
 };
 
-const buildReservationMessage = ({ name, phone, option, resdate, reqdate, text }) => {
+const buildMessage = (type, { name, phone, option, resdate, reqdate, text }) => {
     const body = truncate(text, CONTENT_PREVIEW_LIMIT);
-    return [
-        "🆕 신규 상담 접수 [법무법인 정곡]",
-        "",
-        `📌 분류: ${option || "-"}`,
-        `👤 성명: ${name || "-"}`,
-        `📞 연락처: ${phone || "-"}`,
-        `📅 상담 희망일: ${formatDate(resdate)}`,
-        `🕒 접수일: ${formatDate(reqdate)}`,
-        "",
-        "────────",
-        body || "(내용 없음)",
-        "────────",
-    ].join("\n");
+
+    if (type === "create") {
+        return [
+            "🆕 신규 상담 접수 [법무법인 정곡]",
+            "",
+            `📌 분류: ${option || "-"}`,
+            `👤 성명: ${name || "-"}`,
+            `📞 연락처: ${phone || "-"}`,
+            `📅 상담 희망일: ${formatDate(resdate)}`,
+            `🕒 접수일: ${formatDate(reqdate)}`,
+            "",
+            "────────",
+            body || "(내용 없음)",
+            "────────",
+        ].join("\n");
+    }
+
+    if (type === "update") {
+        return [
+            "🔄 상담 정보 변경 [법무법인 정곡]",
+            "",
+            `📌 분류: ${option || "-"}`,
+            `👤 성명: ${name || "-"}`,
+            `📞 연락처: ${phone || "-"}`,
+            `📅 상담 희망일: ${formatDate(resdate)}`,
+            "",
+            "────────",
+            body || "(내용 없음)",
+            "────────",
+        ].join("\n");
+    }
+
+    if (type === "cancel") {
+        return [
+            "❌ 상담 취소 [법무법인 정곡]",
+            "",
+            `👤 ${name || "-"} (${phone || "-"})`,
+            `📌 분류: ${option || "-"}`,
+            `📅 예정일: ${formatDate(resdate)}`,
+        ].join("\n");
+    }
+
+    return "";
 };
 
-exports.sendReservationNotification = async (reservation) => {
+exports.sendReservationNotification = async (type, reservation) => {
     const token = process.env.TELEGRAM_BOT_TOKEN;
     const chatId = process.env.TELEGRAM_CHAT_ID;
 
@@ -42,7 +72,7 @@ exports.sendReservationNotification = async (reservation) => {
     }
 
     try {
-        const text = buildReservationMessage({
+        const text = buildMessage(type, {
             name: reservation.name,
             phone: reservation.phone,
             option: reservation.option,
@@ -50,6 +80,11 @@ exports.sendReservationNotification = async (reservation) => {
             reqdate: reservation.reqdate,
             text: reservation.text,
         });
+
+        if (!text) {
+            console.warn("[Telegram] unknown notification type:", type);
+            return;
+        }
 
         await axios.post(`${TELEGRAM_API}/bot${token}/sendMessage`, {
             chat_id: chatId,

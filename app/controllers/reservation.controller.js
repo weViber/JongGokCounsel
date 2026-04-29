@@ -21,7 +21,7 @@ exports.reservation = async (req, res) => {
     await reservation.save().then(
         async result => {
             aligo(result)
-            await sendReservationNotification(result)
+            await sendReservationNotification('create', result)
             return res.status(200).json({ message : "성공" , date : date, result })
         }
     ).catch(err => console.log(err))
@@ -53,7 +53,13 @@ exports.update = async  (req, res) => {
         resdate : req.body.resdate,
         option : req.body.option,
         text : req.body.text
-    }}).then(result => res.status(200).json(result))
+    }}).then(async result => {
+        const updated = await Reservation.findOne({_id : req.body._id})
+        if (updated) {
+            await sendReservationNotification('update', updated)
+        }
+        res.status(200).json(result)
+    })
 }
 
 exports.changetime = async  (req, res) => {
@@ -63,8 +69,20 @@ exports.changetime = async  (req, res) => {
         resdate : req.body.resdate,
         option : req.body.option,
         text : req.body.text
-    }}).then(result => res.status(200).json({message : "Success"}))
+    }}).then(async result => {
+        const updated = await Reservation.findOne({_id : req.body._id})
+        if (updated) {
+            await sendReservationNotification('update', updated)
+        }
+        res.status(200).json({message : "Success"})
+    })
 }
 exports.cancel = async (req, res) => {
-    Reservation.deleteOne({_id : req.body._id}).then(result => res.status(200).json(result))
+    const reservation = await Reservation.findOne({_id : req.body._id})
+    Reservation.deleteOne({_id : req.body._id}).then(async result => {
+        if (reservation) {
+            await sendReservationNotification('cancel', reservation)
+        }
+        res.status(200).json(result)
+    })
 }
